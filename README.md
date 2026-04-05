@@ -12,6 +12,20 @@ A Hello World project demonstrating an end-to-end Cloudflare stack using [Hono](
 - **R2** — object storage
 - **Hono** — lightweight web framework
 
+## Project Structure
+
+```
+src/
+  index.ts              — creates app, mounts sub-routes, exports default
+  routes/
+    home.ts             — GET / (dashboard with live D1, KV, R2 data)
+    messages.ts         — GET /db (D1 database query)
+    cache.ts            — GET /kv (KV get/put)
+    storage.ts          — GET /r2 (R2 object storage)
+wrangler.jsonc          — Cloudflare Workers config (JSONC format)
+worker-configuration.d.ts — auto-generated binding types (via `wrangler types`)
+```
+
 ## Routes
 
 | Route | Description |
@@ -34,6 +48,14 @@ pnpm dev           # start dev server at localhost:8787
 ```bash
 npx wrangler d1 migrations apply DB --remote   # apply migrations to production
 pnpm deploy                                     # deploy to Cloudflare Workers
+```
+
+## Regenerate Types
+
+After changing `wrangler.jsonc`, regenerate binding types:
+
+```bash
+npx wrangler types
 ```
 
 ## Cloudflare MCP
