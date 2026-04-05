@@ -1,14 +1,19 @@
 import { Hono } from "hono";
+import type { Counter } from "../counter";
 
 const app = new Hono<{ Bindings: Env }>();
 
 app.get("/", async (c) => {
-  const [dbResult, kvValue, r2List] = await Promise.all([
+  const counterId = c.env.COUNTER.idFromName("dashboard");
+  const counterStub = c.env.COUNTER.get(counterId) as DurableObjectStub<Counter>;
+
+  const [dbResult, kvValue, r2List, pageViews] = await Promise.all([
     c.env.DB.prepare(
       "SELECT * FROM messages ORDER BY created_at DESC LIMIT 5"
     ).all(),
     c.env.CACHE.get("hello"),
     c.env.BUCKET.list(),
+    counterStub.increment(),
   ]);
 
   const messages = dbResult.results;
@@ -66,6 +71,10 @@ app.get("/", async (c) => {
               </table>`
             : "<p class='muted'>No objects yet. Visit <a href=\"/r2\">/r2</a> to create one.</p>"
         }
+
+        <h2>Durable Objects — Page View Counter</h2>
+        <p>This dashboard has been viewed <strong>${pageViews}</strong> time${pageViews === 1 ? "" : "s"}.</p>
+        <p class="muted">Each page gets its own Counter DO instance — try <a href="/counter/hello">/counter/hello</a> for a different counter.</p>
 
         <h2>JSON API Endpoints</h2>
         <ul>
