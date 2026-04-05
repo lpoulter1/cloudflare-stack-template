@@ -1,0 +1,18 @@
+name = "cloudflare-stack-template"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "cloudflare-stack-db"
+database_id = "local"
+migrations_dir = "migrations"
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "local"
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "cloudflare-stack-bucket"
