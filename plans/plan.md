@@ -75,20 +75,40 @@ D1 + KV + R2 = a database, a cache, and a file store — the three pillars of mo
 
 ---
 
-## 4. Stack comparison
+## 4. Pairing with a frontend
 
-### vs Vercel + Supabase (Next.js)
-| | Cloudflare | Vercel + Supabase |
+This Workers API is a **backend** — it can be called from any frontend framework. Some natural pairings:
+
+| Frontend | Where it runs | Notes |
+|----------|--------------|-------|
+| **Next.js (Vercel)** | Vercel edge/serverless | Next.js handles SSR/RSC, calls Workers API for data |
+| **Next.js (Cloudflare)** | CF Pages via `@opennextjs/cloudflare` | Full-stack on Cloudflare, same platform as the API |
+| **React SPA / Vite** | CF Pages or any CDN | Static build, fetches from Workers API |
+| **Astro** | CF Pages | Great for content sites, can call Workers API at build or runtime |
+| **SvelteKit** | CF Pages | First-class Cloudflare adapter |
+| **Mobile / native** | Device | Workers API serves JSON, works like any REST backend |
+
+The key insight: Workers + D1/KV/R2 replaces the **backend + database layer**, not the frontend. You're free to pick any frontend and deploy it anywhere.
+
+### Cloudflare Pages + Workers (full-stack on CF)
+
+If you want everything on Cloudflare, Pages can host the frontend and use the same D1/KV/R2 bindings directly — no separate API needed. But keeping the API as a standalone Worker gives you a clean separation and lets different frontends share the same backend.
+
+## 5. Backend comparison (Workers vs alternatives)
+
+These comparisons are about the **backend** layer specifically — what serves your API and manages your data.
+
+### vs Supabase (BaaS)
+| | Workers + D1/KV/R2 | Supabase |
 |---|---|---|
-| **Edge execution** | 300+ locations | Few regions (unless edge runtime) |
-| **Cold starts** | ~0ms | 250ms+ for serverless functions |
+| **Control** | Full — you write the API logic | Less — auto-generated REST/GraphQL from schema |
 | **Database** | D1 (SQLite, edge reads) | Postgres (full SQL, single region) |
-| **Pricing** | Generous free tier (100K req/day) | More limited free tier |
-| **Ecosystem** | Smaller, framework-agnostic | Massive Next.js ecosystem |
-| **Best for** | API-first, latency-sensitive | Full-stack apps with rich UI |
+| **Auth** | DIY or third-party | Built-in auth, RLS policies |
+| **Realtime** | Needs Durable Objects | Built-in realtime subscriptions |
+| **Best for** | Custom APIs, edge-first | Rapid prototyping, auth-heavy apps |
 
 ### vs AWS Lambda + DynamoDB + S3
-| | Cloudflare | AWS |
+| | Workers + D1/KV/R2 | AWS |
 |---|---|---|
 | **Complexity** | Single config file, one deploy | IAM, API Gateway, CloudFormation |
 | **Cold starts** | ~0ms | 100ms–seconds |
@@ -96,13 +116,13 @@ D1 + KV + R2 = a database, a cache, and a file store — the three pillars of mo
 | **Vendor lock-in** | Moderate (SQLite, S3-compatible R2) | High (DynamoDB is proprietary) |
 | **Best for** | Small-to-medium, edge-first | Enterprise, complex architectures |
 
-### vs Railway / Fly.io (containers)
-| | Cloudflare Workers | Containers |
+### vs containers (Railway / Fly.io)
+| | Workers | Containers |
 |---|---|---|
 | **Model** | V8 isolates (no OS) | Full Linux container |
 | **Flexibility** | JS/TS/Wasm only | Any language |
 | **Scaling** | Automatic, per-request, global | Manual/auto, region-specific |
-| **Best for** | Stateless APIs | Stateful apps, legacy code |
+| **Best for** | Stateless APIs | Stateful apps, background workers, legacy code |
 
 ### Key strengths
 1. **Global by default** — 300+ cities, no region selection
