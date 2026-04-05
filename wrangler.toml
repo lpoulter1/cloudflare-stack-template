@@ -6,12 +6,12 @@ compatibility_flags = ["nodejs_compat"]
 [[d1_databases]]
 binding = "DB"
 database_name = "cloudflare-stack-db"
-database_id = "local"
+database_id = "9f448c52-677b-4f9d-be6d-7d90c29d6373"
 migrations_dir = "migrations"
 
 [[kv_namespaces]]
 binding = "CACHE"
-id = "local"
+id = "92efb940b3eb4cbeadbd0581b7749ccf"
 
 [[r2_buckets]]
 binding = "BUCKET"
