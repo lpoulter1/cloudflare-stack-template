@@ -1,6 +1,6 @@
 # Cloudflare Stack Template
 
-A Hello World project demonstrating an end-to-end Cloudflare stack using [Hono](https://hono.dev/) on Workers with D1, KV, and R2 bindings.
+A Hello World project demonstrating an end-to-end Cloudflare stack using [Hono](https://hono.dev/) on Workers with D1, KV, R2, and Durable Objects bindings.
 
 **Live:** https://cloudflare-stack-template.lpoulter1984.workers.dev
 
@@ -10,18 +10,21 @@ A Hello World project demonstrating an end-to-end Cloudflare stack using [Hono](
 - **D1** — SQLite database
 - **KV** — key-value store
 - **R2** — object storage
+- **Durable Objects** — stateful coordination ([best practices](https://developers.cloudflare.com/durable-objects/best-practices/rules-of-durable-objects/))
 - **Hono** — lightweight web framework
 
 ## Project Structure
 
 ```
 src/
-  index.ts              — creates app, mounts sub-routes, exports default
+  index.ts              — creates app, mounts sub-routes, exports default + Counter
+  counter.ts            — Counter Durable Object class (SQLite-backed)
   routes/
     home.ts             — GET / (dashboard with live D1, KV, R2 data)
     messages.ts         — GET /db (D1 database query)
     cache.ts            — GET /kv (KV get/put)
     storage.ts          — GET /r2 (R2 object storage)
+    counter.ts          — GET /counter/:name (Durable Object hit counter)
 plans/
   plan.md               — roadmap, next steps, and stack comparison
 wrangler.jsonc          — Cloudflare Workers config (JSONC format)
@@ -38,6 +41,8 @@ vitest.config.mts       — test config using @cloudflare/vitest-pool-workers
 | `GET /kv` | KV get/put demo |
 | `GET /r2` | R2 object storage demo |
 | `GET /r2/:key` | Download an R2 object |
+| `GET /counter/:name` | Durable Object counter — increment and return count |
+| `GET /counter/:name/value` | Read counter without incrementing |
 
 ## Getting Started
 

@@ -32,7 +32,7 @@ app.get("/", async (c) => {
       </head>
       <body>
         <h1>Cloudflare Stack Template</h1>
-        <p class="muted">Live data from D1, KV, and R2 bindings</p>
+        <p class="muted">Live data from D1, KV, R2, and Durable Objects</p>
 
         <h2>D1 — Recent Messages</h2>
         ${
@@ -72,6 +72,7 @@ app.get("/", async (c) => {
           <li><a href="/db">/db</a> — D1 messages</li>
           <li><a href="/kv">/kv</a> — KV read/write</li>
           <li><a href="/r2">/r2</a> — R2 list</li>
+          <li><a href="/counter/hello">/counter/:name</a> — Durable Object counter</li>
         </ul>
       </body>
     </html>

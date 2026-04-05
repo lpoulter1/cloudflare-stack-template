@@ -26,5 +26,13 @@
       "binding": "BUCKET",
       "bucket_name": "cloudflare-stack-bucket"
     }
+  ],
+  "durable_objects": {
+    "bindings": [
+      { "name": "COUNTER", "class_name": "Counter" }
+    ]
+  },
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["Counter"] }
   ]
 }
