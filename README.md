@@ -61,11 +61,22 @@ pnpm test          # run all tests
 pnpm test:watch    # watch mode
 ```
 
-## Deploy
+## CI/CD
+
+Pushing to `main` triggers the GitHub Actions workflow (`.github/workflows/ci.yml`):
+
+1. **Test** — runs `pnpm test` in the Workers runtime
+2. **Deploy** — deploys to Cloudflare Workers via `wrangler-action` (only on `main`, after tests pass)
+
+PRs also run the test job automatically.
+
+**Setup:** add a `CLOUDFLARE_API_TOKEN` repo secret (**Settings > Secrets > Actions**). Create a token at [dash.cloudflare.com/profile/api-tokens](https://dash.cloudflare.com/profile/api-tokens) using the "Edit Cloudflare Workers" template.
+
+### Manual Deploy
 
 ```bash
 npx wrangler d1 migrations apply DB --remote   # apply migrations to production
-pnpm deploy                                     # deploy to Cloudflare Workers
+pnpm run deploy                                 # deploy to Cloudflare Workers
 ```
 
 ## Regenerate Types
