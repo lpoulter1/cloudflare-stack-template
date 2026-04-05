@@ -60,7 +60,7 @@ app.get("/", async (c) => {
                 ${objects
                   .map(
                     (o) =>
-                      `<tr><td>${o.key}</td><td>${o.size} B</td><td>${o.uploaded}</td></tr>`
+                      `<tr><td><a href="/r2/${encodeURIComponent(o.key)}">${o.key}</a></td><td>${o.size} B</td><td>${o.uploaded}</td></tr>`
                   )
                   .join("")}
               </table>`

@@ -13,4 +13,14 @@ app.get("/", async (c) => {
   return c.json({ source: "R2", objects });
 });
 
+app.get("/:key", async (c) => {
+  const object = await c.env.BUCKET.get(c.req.param("key"));
+  if (!object) {
+    return c.notFound();
+  }
+  c.header("Content-Type", object.httpMetadata?.contentType ?? "application/octet-stream");
+  c.header("Content-Disposition", `attachment; filename="${c.req.param("key")}"`);
+  return c.body(object.body);
+});
+
 export default app;
