@@ -22,8 +22,11 @@ src/
     messages.ts         — GET /db (D1 database query)
     cache.ts            — GET /kv (KV get/put)
     storage.ts          — GET /r2 (R2 object storage)
+plans/
+  plan.md               — roadmap, next steps, and stack comparison
 wrangler.jsonc          — Cloudflare Workers config (JSONC format)
 worker-configuration.d.ts — auto-generated binding types (via `wrangler types`)
+vitest.config.mts       — test config using @cloudflare/vitest-pool-workers
 ```
 
 ## Routes
@@ -34,6 +37,7 @@ worker-configuration.d.ts — auto-generated binding types (via `wrangler types`
 | `GET /db` | D1 database query demo |
 | `GET /kv` | KV get/put demo |
 | `GET /r2` | R2 object storage demo |
+| `GET /r2/:key` | Download an R2 object |
 
 ## Getting Started
 
@@ -41,6 +45,15 @@ worker-configuration.d.ts — auto-generated binding types (via `wrangler types`
 pnpm install
 pnpm db:migrate   # apply D1 schema locally
 pnpm dev           # start dev server at localhost:8787
+```
+
+## Testing
+
+Tests run inside the Workers runtime via [`@cloudflare/vitest-pool-workers`](https://developers.cloudflare.com/workers/testing/vitest-integration/) — no mocking needed, real D1/KV/R2 bindings are provided automatically.
+
+```bash
+pnpm test          # run all tests
+pnpm test:watch    # watch mode
 ```
 
 ## Deploy
@@ -58,6 +71,16 @@ After changing `wrangler.jsonc`, regenerate binding types:
 npx wrangler types
 ```
 
-## Cloudflare MCP
+## AI Tooling
 
-This project includes a `.mcp.json` config for the [Cloudflare MCP server](https://developers.cloudflare.com/agents/model-context-protocol/). When you open this project in Claude Code, you get access to Cloudflare management tools (Workers, D1, KV, R2) via natural language.
+### Cloudflare MCP Server
+
+This project includes a `.mcp.json` config for the [Cloudflare MCP server](https://developers.cloudflare.com/agents/model-context-protocol/). When you open this project in Claude Code, you get access to Cloudflare management tools (Workers, D1, KV, R2) via natural language — query your database, inspect KV keys, list R2 objects, and more without leaving the terminal.
+
+### Workers Best Practices Skill
+
+This project includes a `workers-best-practices` Claude Code skill (in `skills/`) that reviews and authors Workers code against production best practices. It covers `wrangler.jsonc` config, binding types, route structure, streaming, error handling, and more. Use it by typing `/workers-best-practices` in Claude Code.
+
+## Roadmap
+
+See [plans/plan.md](plans/plan.md) for ideas on fleshing out the examples, additional Cloudflare services to add, project ideas, and a comparison of this stack vs Vercel+Supabase, AWS Lambda, and container-based alternatives.
