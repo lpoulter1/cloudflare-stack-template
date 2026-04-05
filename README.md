@@ -16,7 +16,7 @@ A Hello World project demonstrating an end-to-end Cloudflare stack using [Hono](
 
 | Route | Description |
 |-------|-------------|
-| `GET /` | Hello World landing page |
+| `GET /` | Dashboard with live data from D1, KV, and R2 |
 | `GET /db` | D1 database query demo |
 | `GET /kv` | KV get/put demo |
 | `GET /r2` | R2 object storage demo |
